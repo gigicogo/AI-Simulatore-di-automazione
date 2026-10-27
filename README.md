@@ -1,0 +1,46 @@
+# Esercitazione A — Simulatore di automazione
+
+Mini web app statica per il **Modulo B sull'AI nella Pubblica Amministrazione**.
+
+## Obiettivo formativo
+
+Far capire a partecipanti non tecnici che un'automazione:
+
+1. parte quando si verifica un **evento**;
+2. valuta una **condizione** già programmata;
+3. svolge una **azione** già prevista;
+4. raggiunge l'**arresto**, senza decidere autonomamente nuovi compiti.
+
+L'app include due casi fittizi: una segnalazione arrivata con un modulo e il controllo settimanale delle scadenze. **Non utilizza alcun modello AI** e non invia email, non modifica gestionali e non salva dati personali.
+
+## Come usare l'esercizio (3-5 minuti)
+
+1. Apri `index.html` nel browser.
+2. Seleziona **Segnalazione ricevuta** e lascia impostato **Sì, è completa**.
+3. Premi **Avvia simulazione**, osservando i quattro passaggi.
+4. Seleziona **No, è incompleta** e ripeti.
+5. Chiedi: «È cambiata la regola, oppure soltanto il dato in ingresso?».
+6. Facoltativo: ripeti con **Scadenze dell'ufficio**.
+
+**Risposta attesa:** è cambiato solo il dato. La regola predefinita seleziona un ramo diverso; non inventa nuovi passaggi. 
+
+## Pubblicazione su GitHub Pages
+
+1. Crea un repository GitHub, ad esempio `simulatore-automazione-pa`.
+2. Carica nella cartella principale il file **`index.html`**.
+3. Apri **Settings → Pages → Build and deployment**; scegli **Deploy from a branch**, poi `main` e `/ (root)`; salva.
+4. Dopo la pubblicazione, l'indirizzo segue normalmente questo schema: `https://NOMEUTENTE.github.io/simulatore-automazione-pa/` (sostituisci NOMEUTENTE con il tuo account e usa il nome esatto del repository).
+
+Non è necessaria alcuna build, dipendenza, chiave API o account aggiuntivo per utilizzare l'app. Puoi pubblicare anche il solo `index.html`.
+
+## Sicurezza e limiti
+
+- Tutto avviene nel browser e senza richieste di rete da parte dell'applicazione.
+- Tutti i dati mostrati sono **inventati**.
+- Le azioni sono **solo rappresentate a schermo**; nessuna notifica viene inviata realmente.
+- Nessuna informazione della PA va inserita nell'esercizio.
+- Il modello mostrato è volutamente semplice: molte automazioni reali prevedono più condizioni, eccezioni, passaggi e controlli.
+
+## Personalizzazione
+
+Per aggiornare i testi apri `index.html` in un editor di testo e modifica l'oggetto JavaScript `scenarios` in fondo al file. I colori principali si trovano in cima allo stile CSS, nel blocco `:root`.
