@@ -1,132 +1,57 @@
-# ⚙️ Esercitazione A — Simulatore di automazione
+# IFTTT PA Lab — Esercitazione A (versione potenziata)
 
-**Simulatore di automazione** è una mini web app didattica che mostra come funziona una sequenza automatizzata: un **evento** fa partire il processo, una **condizione** già programmata viene valutata, viene eseguita un’**azione** prevista e il flusso arriva all’**arresto**.
+Una web app didattica **statica e autonoma** per il Modulo B dedicato all'intelligenza artificiale nella Pubblica Amministrazione. Si ispira alla logica delle *Applets* (IF THIS → THEN THAT) di IFTTT senza riprodurre la piattaforma o collegare alcun servizio reale.
 
-L’esercitazione è pensata per il **Modulo B** del percorso sull’IA nella Pubblica Amministrazione e aiuta i partecipanti non tecnici a capire la differenza tra un’automazione basata su regole e un sistema di IA generativa.
+## Che cosa insegna
 
-## 🎯 A chi è rivolto
+Il partecipante non guarda soltanto una simulazione preimpostata: **progetta un collegamento tra servizi** scegliendo:
 
-L’esercitazione è pensata per:
+1. **IF THIS** — il servizio e l'evento che avviano l'automazione;
+2. **AND IF** — una condizione, relativa ai dati disponibili;
+3. **THEN THAT** — due azioni svolte da servizi destinatari;
+4. **OTHERWISE** — il comportamento nei casi non previsti dalla condizione.
 
-- funzionari ed esecutori della Pubblica Amministrazione;
-- personale non tecnico che inizia a esplorare automazioni e IA;
-- responsabili di uffici che devono valutare processi ripetitivi;
-- formatori e docenti che vogliono spiegare in modo semplice evento, condizione, azione e arresto;
-- partecipanti ai percorsi di upskilling sull’IA nella PA.
+Può poi provare il risultato su dati inventati diversi, confrontare la configurazione con la consegna e scaricare una semplice **scheda del processo in Markdown**.
 
-## 🧠 Obiettivo formativo
+## Le tre missioni
 
-L’app mostra che un’automazione:
+- **1 — Scadenze dell'ufficio:** ogni giovedì verifica scadenze a sette giorni, prepara elenco e bozza di notifica interna, annota l'assenza di scadenze.
+- **2 — Segnalazioni dei cittadini:** riceve un modulo, controlla i campi, registra e crea un compito interno; le richieste incomplete devono essere gestite da una persona.
+- **3 — Prenotazione di una sala comunale:** verifica domanda e disponibilità della sala; prepara soltanto bozze; i casi dubbi vanno a controllo umano.
 
-1. parte quando si verifica un **evento**;
-2. valuta una **condizione** già programmata;
-3. svolge un’**azione** già prevista;
-4. raggiunge l’**arresto**, senza decidere autonomamente nuovi compiti.
+Le missioni sono **esercizi di progettazione di automazioni**, non esercizi su agenti AI. Non utilizzano modelli linguistici.
 
-Il messaggio centrale è semplice:
+## Pubblicazione su GitHub Pages
 
-> Un’automazione esegue istruzioni già definite. Può seguire percorsi diversi in base ai dati, ma non inventa da sola nuove regole.
+Il file principale si chiama `index.html` e contiene HTML, CSS e JavaScript: **nessun framework, build o dipendenza**.
 
-## 🕹️ Come funziona
+Per sostituire la precedente app nel repository `AI-Simulatore-di-automazione`:
 
-La durata indicativa è di **3–5 minuti**.
+1. Aprire il repository GitHub.
+2. Sostituire il file `index.html` esistente con quello di questo pacchetto (il nome deve restare esattamente `index.html`).
+3. Salvare con un commit.
+4. Se Pages è già configurato sulla branch pubblicata, la nuova versione comparirà sullo stesso indirizzo quando la pubblicazione avrà termine.
 
-1. Apri `index.html` nel browser.
-2. Scegli uno dei due scenari disponibili.
-3. Modifica soltanto il dato di ingresso.
-4. Premi **Avvia simulazione**.
-5. Osserva i quattro passaggi: evento, condizione, azione e arresto.
-6. Cambia il dato e ripeti la simulazione.
-7. Confronta i risultati: è cambiata la regola oppure soltanto il dato?
+Si può anche pubblicare in un **nuovo repository**: `Settings → Pages → Deploy from a branch → main / root` (se la configurazione disponibile per il repository lo prevede).
 
-### Risposta attesa
+Per una prova locale, è sufficiente aprire `index.html` in un browser aggiornato. Non servono server o accessi.
 
-Cambia soltanto il **dato in ingresso**. La regola predefinita seleziona un ramo diverso, ma non inventa nuovi passaggi né assume decisioni autonome.
+## Dati, privacy e sicurezza
 
-## 🧩 I due scenari
+- Tutti gli scenari e i dati sono **inventati**.
+- Nessuna richiesta di account, credenziali, token, permessi o documenti.
+- Nessuna chiamata di rete, API o memorizzazione su server.
+- Nessuna email inviata, nessun evento di calendario creato, nessuna pubblicazione.
+- Il file `.md` viene generato **localmente nel browser**.
+- Le selezioni non vengono salvate automaticamente dopo la chiusura della pagina.
 
-| Scenario | Evento | Condizione | Azione possibile |
-|---|---|---|---|
-| **Segnalazione ricevuta** | Arriva un modulo di segnalazione simulato | I campi necessari sono completi? | Notifica per l’operatore oppure richiesta di integrazione |
-| **Scadenze dell’ufficio** | È giovedì alle 9:00, orario simulato | Ci sono attività in scadenza nei prossimi 7 giorni? | Preparazione di un elenco oppure nessun avviso |
+Il simulatore è uno strumento formativo e non una soluzione autorizzata per i processi reali dell'Ente.
 
-In entrambi i casi, le azioni sono **solo rappresentate a schermo**: nessuna email viene inviata e nessun dato reale viene modificato.
+## IFTTT: analogia e limiti
 
-## 💻 Come usare l’app
+Nella piattaforma IFTTT reale un'Applet connette servizi attraverso trigger, azioni ed eventualmente query e filtri. L'app del corso **semplifica volutamente** questi elementi in schede comprensibili anche a chi non programma; non simula credenziali, autorizzazioni, integrazioni tecniche, gestione degli errori di rete o funzionalità soggette ai diversi piani di servizio.
 
-L’app è una **web app statica autonoma**, contenuta in un unico file `index.html`.
-
-- Non richiede account, registrazione o installazione.
-- Non utilizza modelli AI, agenti o skill.
-- Non invia email, notifiche o richieste di rete.
-- Non modifica gestionali o sistemi dell’ente.
-- Non salva dati personali.
-- Funziona anche offline.
-
-### Avvio locale
-
-1. Scarica o clona il repository.
-2. Apri `index.html` con un browser moderno.
-3. Scegli lo scenario e avvia la simulazione.
-
-### Clonare il repository
-
-```bash
-git clone [https://github.com/gigicogo/AI-Simulatore-di-automazione.git](https://github.com/gigicogo/AI-Simulatore-di-automazione.git)
-cd AI-Simulatore-di-automazione
-```
-
-## 🧪 Prova per l’aula
-
-La prova guidata dura circa **3 minuti**:
-
-1. Avvia la simulazione con il primo dato.
-2. Cambia il dato, ad esempio da “Sì, è completa” a “No, è incompleta”.
-3. Ripeti la simulazione.
-4. Confronta i due percorsi.
-5. Chiedi al gruppo: **“È cambiata la regola, oppure soltanto il dato in ingresso?”**
-
-Questa attività è utile per introdurre la differenza tra:
-
-- un’automazione basata su regole fisse;
-- un assistente AI generativo;
-- un agente che potrebbe pianificare o eseguire più azioni.
-
-## 🔐 Sicurezza e limiti
-
-- Tutta l’elaborazione avviene nel browser.
-- Tutti i dati mostrati sono inventati.
-- Le azioni sono simulate e non producono effetti reali.
-- Nessuna informazione della PA deve essere inserita nell’esercizio.
-- Il modello è volutamente semplice: le automazioni reali possono includere più condizioni, eccezioni, passaggi e controlli.
-
-## 🛠️ Personalizzazione
-
-Per aggiornare i contenuti:
-
-1. Apri `index.html` in un editor di testo.
-2. Individua l’oggetto JavaScript `scenarios`, alla fine del file.
-3. Modifica testi, domande, regole, messaggi e risultati.
-4. Per cambiare i colori principali, intervenire sulle variabili CSS nel blocco `:root`.
-
-Non è necessaria alcuna build, dipendenza, chiave API o configurazione aggiuntiva.
-
-## 🧪 Possibili evoluzioni
-
-- Aggiunta di nuovi scenari per la PA.
-- Visualizzazione di regole più complesse, con più condizioni o eccezioni.
-- Confronto esplicito tra automazione a regole e assistente AI.
-- Versione inglese dell’interfaccia.
-- Materiali per il docente e schede di lavoro per i partecipanti.
-- Integrazione con esempi di workflow reali, resi anonimi.
-
-## 🤝 Contribuire
-
-Sono benvenuti suggerimenti su nuovi scenari, miglioramenti didattici, correzioni e materiali di supporto.
-
-1. Apri una Issue per proporre un’idea o segnalare un problema.
-2. Oppure apri una Pull Request con una modifica o un nuovo scenario.
-3. Mantieni la struttura a quattro passaggi: evento, condizione, azione e arresto.
+Documentazione ufficiale: <https://help.ifttt.com/hc/en-us/articles/115010361348-What-is-an-Applet>
 
 ---
 
