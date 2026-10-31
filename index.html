@@ -1,358 +1,316 @@
 <!doctype html>
 <html lang="it">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#132b4c">
-  <meta name="description" content="Simulatore didattico di un'automazione: evento, condizione, azione e arresto. Esempi fittizi per la Pubblica Amministrazione.">
-  <title>Simulatore di automazione · Modulo B</title>
-  <style>
-    :root{
-      --navy:#132b4c; --navy2:#193a63; --blue:#0068b7; --blue-soft:#ecf5fd;
-      --amber:#d99424; --amber-soft:#fff4df; --ink:#192c43; --muted:#526377;
-      --bg:#f4f7fb; --card:#fff; --border:#dce5ee; --good:#17785d;
-      --good-soft:#e5f5ee; --focus:#087fbf; --radius:17px;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
-    button,input{font:inherit}
-    button{cursor:pointer}
-    button:focus-visible,input:focus-visible+span{outline:3px solid var(--focus);outline-offset:3px}
-    .skip{position:absolute;left:-10000px;top:8px;background:#fff;color:var(--navy);padding:9px;z-index:99}
-    .skip:focus{left:12px}
-    .top{background:var(--navy);color:#fff;border-bottom:6px solid var(--amber)}
-    .wrap{max-width:1160px;margin:0 auto;padding:0 24px}
-    .top-inner{padding:23px 0 27px}
-    .eyebrow{font-size:.76rem;font-weight:800;letter-spacing:.10em;text-transform:uppercase;color:#f5c878}
-    h1{margin:7px 0 7px;font-size:clamp(1.55rem,3vw,2.45rem);line-height:1.12;letter-spacing:-.03em}
-    .top p{margin:0;color:#d8e5f4;max-width:880px}
-    .top-tag{display:inline-flex;align-items:center;gap:7px;border:1px solid #8097b1;padding:5px 10px;border-radius:99px;color:#fff;font-size:.79rem;font-weight:700;margin-top:13px}
-    .dot{width:8px;height:8px;background:#ffd484;border-radius:50%;display:inline-block}
-    main.wrap{padding-top:22px;padding-bottom:34px}
-    .section-title{font-weight:800;font-size:.82rem;letter-spacing:.07em;text-transform:uppercase;color:var(--blue);margin:0 0 11px}
-    .flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 22px}
-    .flow-item{min-height:113px;background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:14px 15px;position:relative;transition:background .25s,border-color .25s,box-shadow .25s}
-    .flow-item:not(:last-child)::after{content:'›';font-size:25px;font-weight:700;color:var(--amber);position:absolute;right:-13px;top:36px;z-index:2}
-    .flow-top{display:flex;align-items:center;gap:9px}
-    .flow-number{background:#eaf1f8;color:var(--navy);border-radius:50%;width:29px;height:29px;display:inline-grid;place-items:center;font-size:.83rem;font-weight:800;flex:none}
-    .flow-item strong{font-size:.99rem}
-    .flow-item small{display:block;margin:7px 0 0 38px;color:var(--muted);font-size:.84rem;line-height:1.3}
-    .flow-item.active{background:#eff7fd;border:2px solid var(--blue);box-shadow:0 0 0 3px rgba(0,104,183,.08);padding:13px 14px}
-    .flow-item.done{border-color:#a8d5c1;background:#f1fbf6}
-    .flow-item.done .flow-number{background:var(--good);color:#fff}
-    .grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:stretch}
-    .panel{background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 3px 14px #152b4610;min-width:0;overflow:hidden}
-    .panel-head{padding:18px 20px 12px;border-bottom:1px solid #e6ebf1}
-    .panel-head h2{margin:0 0 3px;font-size:1.2rem;line-height:1.25;color:var(--navy)}
-    .panel-head p{margin:0;color:var(--muted);font-size:.91rem}
-    .panel-body{padding:18px 20px 20px}
-    .small-title{margin:0 0 10px;font-weight:800;font-size:.9rem;color:var(--navy)}
-    .tabrow{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:19px}
-    .tab{flex:1;min-width:165px;background:#f6f8fa;border:1.5px solid var(--border);border-radius:11px;text-align:left;padding:11px 12px;font-weight:750;color:var(--navy);line-height:1.2}
-    .tab span{display:block;font-weight:400;color:#526377;font-size:.8rem;margin-top:5px}
-    .tab[aria-selected="true"]{border-color:var(--blue);background:var(--blue-soft);box-shadow:inset 0 0 0 1px var(--blue)}
-    fieldset{border:0;margin:0;padding:0;min-width:0}
-    legend{padding:0;margin-bottom:9px;font-weight:800;font-size:.91rem;color:var(--navy)}
-    .choices{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-    .choice{position:relative;display:block;cursor:pointer}
-    .choice input{position:absolute;opacity:0;pointer-events:none}
-    .choice span{display:block;border:1.5px solid var(--border);border-radius:10px;padding:11px 12px;background:white;min-height:80px;color:var(--ink)}
-    .choice strong{display:block;font-size:.92rem}
-    .choice em{font-style:normal;display:block;color:var(--muted);font-size:.8rem;margin-top:4px;line-height:1.3}
-    .choice input:checked + span{border-color:var(--blue);background:#edf6ff;box-shadow:inset 0 0 0 1px var(--blue)}
-    .case{margin-top:15px;background:#f5f8fb;border-radius:10px;padding:13px 14px}
-    .case b{color:var(--navy);font-size:.88rem}
-    .case p{color:#415267;margin:5px 0 0;font-size:.88rem}
-    .rule{border-left:4px solid var(--amber);background:var(--amber-soft);padding:13px 14px;border-radius:0 10px 10px 0;margin-top:16px}
-    .rule strong{color:#6d4410;font-size:.87rem;display:block;margin-bottom:4px}
-    .rule p{font-size:.88rem;margin:0;color:#59482e}
-    .actions{display:flex;gap:9px;margin-top:18px;flex-wrap:wrap}
-    .primary{background:var(--blue);border:1px solid var(--blue);color:white;padding:11px 16px;border-radius:10px;font-weight:800;flex:1;min-width:195px}
-    .primary:hover{background:#005b9e}
-    .primary:disabled{cursor:wait;background:#6388a6}
-    .secondary{background:#fff;color:var(--navy);border:1px solid #c4d1de;padding:11px 13px;border-radius:10px;font-weight:700}
-    .secondary:hover{background:#eff5fc}
-    .secondary:disabled{opacity:.6;cursor:not-allowed}
-    .result-top{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-    .status{padding:5px 9px;border-radius:99px;color:#536376;background:#eaf0f5;font-size:.76rem;font-weight:800}
-    .status.running{background:#e8f4fc;color:#06578f}
-    .status.complete{background:var(--good-soft);color:var(--good)}
-    .steps{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:10px;min-height:328px}
-    .step{display:grid;grid-template-columns:25px 1fr;gap:11px;align-items:start;border:1px solid #e5ebf1;border-radius:11px;padding:12px 13px;background:#fbfcfe;opacity:.53}
-    .step .num{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:#e7edf4;color:#466079;font-size:.79rem;font-weight:800}
-    .step strong{display:block;color:var(--navy);font-size:.88rem}
-    .step p{margin:3px 0 0;color:var(--muted);font-size:.87rem;line-height:1.32}
-    .step.revealed{opacity:1;border-color:#bad7e9;background:#f6fbff}
-    .step.revealed .num{background:var(--blue);color:white}
-    .step.final{border-color:#a7d8c0;background:#f2fbf6}
-    .step.final .num{background:var(--good)}
-    .placeholder{font-style:italic}
-    .outcome{margin-top:14px;padding:13px 15px;border:1px solid #b4d8c4;border-radius:11px;background:#eef9f2;display:none}
-    .outcome.show{display:block}
-    .outcome strong{font-size:.9rem;color:#155d48}
-    .outcome p{margin:5px 0 0;font-size:.87rem;color:#285444}
-    .below{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
-    .note{border:1px solid var(--border);border-radius:14px;padding:16px 18px;background:#fff}
-    .note h2{margin:0 0 9px;color:var(--navy);font-size:1rem}
-    .note p{margin:5px 0;font-size:.9rem;color:#435369}
-    .note ol{padding-left:22px;margin:0;color:#435369;font-size:.9rem}
-    .note li{margin:4px 0}
-    footer{border-top:1px solid #d9e3ec;color:#627084;font-size:.78rem;padding:15px 0 24px}
-    .visually-hidden{position:absolute;height:1px;width:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
-    @media(max-width:800px){.grid,.below{grid-template-columns:1fr}.flow{grid-template-columns:repeat(2,1fr)}.flow-item:nth-child(2)::after{display:none}.steps{min-height:0}}
-    @media(max-width:470px){.wrap{padding-left:14px;padding-right:14px}.flow{gap:7px}.flow-item{padding:11px;min-height:106px}.flow-item.active{padding:10px}.flow-item small{margin-left:0}.flow-item:not(:last-child)::after{display:none}.panel-head,.panel-body{padding-left:14px;padding-right:14px}.choices{grid-template-columns:1fr}.choice span{min-height:0}.tab{min-width:0}}
-    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#142a49">
+<meta name="description" content="Laboratorio didattico interattivo: collega servizi e progetta automazioni della Pubblica Amministrazione, come in IFTTT. Nessun dato reale.">
+<title>IFTTT PA Lab · Progetta un'automazione</title>
+<style>
+:root{--navy:#152d4d;--navy2:#203e65;--blue:#0872bd;--bluep:#e9f4fd;--ink:#213047;--muted:#56657a;--gold:#cf861e;--goldp:#fff5e6;--bg:#f4f6fa;--line:#d9e1eb;--white:#fff;--green:#177554;--greenp:#e9f7f0;--red:#a63f37;--redp:#fff0ef;--radius:15px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #298edd;outline-offset:2px}
+.wrap{width:min(1160px,calc(100% - 36px));margin:0 auto}
+.skip{position:absolute;top:-100px;left:12px;z-index:99;background:white;color:var(--navy);padding:8px}
+.skip:focus{top:8px}
+header{background:linear-gradient(115deg,#102541 0%,#1c436d 100%);color:white;border-bottom:6px solid var(--gold)}
+header .wrap{padding:30px 0 31px}
+.kicker{font-size:.78rem;letter-spacing:.11em;text-transform:uppercase;color:#fbd48a;font-weight:800}
+h1{font-size:clamp(1.7rem,3.1vw,2.85rem);letter-spacing:-.035em;line-height:1.14;margin:6px 0 10px}
+.lead{margin:0;max-width:950px;color:#e0e9f7;font-size:1.02rem}
+.top-tags{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
+.tag{border:1px solid #7994b0;border-radius:20px;font-size:.79rem;padding:5px 10px;color:#eaf4ff;font-weight:650}
+main{padding-top:23px;padding-bottom:55px}
+.concept{background:#fff;border:1px solid var(--line);border-radius:14px;padding:17px 19px;margin:0 0 24px;box-shadow:0 2px 12px #142a4910}
+.concept-title{margin:0 0 9px;color:var(--navy);font-weight:800;font-size:.89rem;text-transform:uppercase;letter-spacing:.06em}
+.concept-flow{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap}
+.concept-flow span{flex:1;min-width:165px;background:#f0f5fb;border-radius:9px;padding:10px 12px;text-align:center;font-size:.89rem}
+.concept-flow b{color:var(--navy)}
+.concept-flow .arrow{flex:none;min-width:0;display:grid;place-items:center;background:transparent;font-size:1.35rem;color:var(--gold);padding:0 1px}
+.heading-row{display:flex;align-items:baseline;gap:15px;flex-wrap:wrap;justify-content:space-between;margin-bottom:12px}
+h2{font-size:1.35rem;color:var(--navy);line-height:1.25;margin:0}
+.heading-row p{font-size:.9rem;color:var(--muted);margin:0}
+.missions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:20px}
+.mission{border:1.5px solid var(--line);background:white;border-radius:13px;text-align:left;padding:15px 16px;display:flex;flex-direction:column;gap:7px;transition:background .15s,box-shadow .15s,border-color .15s}
+.mission strong{font-size:1rem;color:var(--navy)}.mission small{font-size:.86rem;color:var(--muted);line-height:1.4}
+.mission:hover{border-color:#9ab7d3}
+.mission[aria-pressed=true]{border-color:var(--blue);background:var(--bluep);box-shadow:inset 0 0 0 1px var(--blue)}
+.mission .mini{font-size:.74rem;font-weight:800;color:#88560e;text-transform:uppercase;letter-spacing:.04em}
+.assignment{border:1px solid #e4d2af;border-left:5px solid var(--gold);background:#fffaf1;border-radius:0 13px 13px 0;padding:18px 22px;margin-bottom:21px}
+.assignment h3{color:#704c1b;margin:0 0 7px;font-size:1.12rem}.assignment p{margin:0 0 8px}.assignment ul{margin:0;padding-left:22px;display:grid;gap:2px}.assignment .hint{margin:13px 0 0;font-size:.87rem;color:#704c1b}
+.workspace{display:grid;grid-template-columns:minmax(0,1.14fr) minmax(0,.86fr);gap:18px;align-items:start}
+.panel{background:white;border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 2px 12px #183b6010;min-width:0;overflow:hidden}
+.panel-head{background:#fafbfd;border-bottom:1px solid var(--line);padding:16px 20px}
+.panel-head h2{font-size:1.12rem;margin:0 0 3px}.panel-head p{font-size:.85rem;color:var(--muted);margin:0}
+.body{padding:19px 20px 20px}
+.builder-row{border:1px solid #e2e9f1;border-radius:12px;padding:13px 14px;margin-bottom:12px;background:#fff}
+.builder-row:last-child{margin-bottom:0}
+.builder-row .step-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.number{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#dbeaf7;color:#0d5d9c;flex:none;font-size:.86rem;font-weight:850}
+.step-head strong{font-size:.98rem;color:var(--navy)}
+.builder-row p{font-size:.84rem;color:var(--muted);margin:0 0 8px 40px}
+.sel-label{display:block;color:#3b5069;font-size:.83rem;font-weight:750;margin:8px 0 5px}
+select{background:white;border:1.5px solid #bfcbd9;border-radius:8px;width:100%;min-height:45px;padding:9px 10px;color:var(--ink)}
+select:invalid{color:#6b798e}
+.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.action-grid > div{min-width:0}
+.hint-small{font-size:.76rem;color:var(--muted);margin-top:5px}
+.btn-row{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}
+.btn{border:1px solid #b5c5d5;background:white;color:var(--navy);padding:10px 13px;font-weight:800;border-radius:10px;font-size:.9rem}
+.btn:hover{background:#f0f6fb}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:white}
+.btn.primary:hover{background:#075c9a}
+.btn.good{background:var(--green);border-color:var(--green);color:white}
+.btn:disabled{opacity:.48;cursor:not-allowed}
+.rightcol{display:grid;gap:16px}
+.flow-preview{display:grid;gap:7px}
+.flow-node{padding:12px 14px;border:1px solid #bfd2e2;background:#f5f9fe;border-radius:10px}
+.flow-node .label{display:block;font-size:.72rem;color:#32698d;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.flow-node strong{display:block;font-size:.89rem;color:var(--navy);margin-top:3px;overflow-wrap:anywhere}
+.flow-node.missing strong{color:#69788b;font-weight:500;font-style:italic}
+.flow-node.else{background:#fffbf4;border-color:#eddaa9}.flow-node.else .label{color:#91630e}
+.flow-arrow{text-align:center;font-size:1rem;color:#be852b;line-height:1}
+.summary-services{display:flex;flex-wrap:wrap;gap:6px;margin-top:13px}
+.service-pill{font-size:.75rem;background:#e7edf5;color:#233e5d;border-radius:20px;padding:5px 9px}
+.meta-info{font-size:.81rem;color:var(--muted);line-height:1.4;margin:11px 0 0}
+.tests{margin-top:21px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start}
+.test-controls{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end}
+.test-controls .sel-label{margin-top:0}
+.log{list-style:none;padding:0;margin:15px 0 0;display:grid;gap:9px}
+.log li{border:1px solid #e1e8f0;border-left:4px solid #b2c5d7;border-radius:8px;padding:9px 11px;background:#fbfdff;font-size:.88rem}
+.log .ok{border-left-color:var(--green);background:#f2fbf6}.log .warn{border-left-color:var(--gold);background:#fffaf2}.log .danger{border-left-color:var(--red);background:#fff5f4}
+.log b{color:var(--navy)}
+.empty{font-style:italic;color:var(--muted);font-size:.88rem}
+.eval{margin-top:12px;display:none}
+.eval.visible{display:block}
+.progress{height:10px;background:#e8edf3;overflow:hidden;border-radius:20px;margin:10px 0 13px}
+.progress > span{background:var(--blue);height:100%;width:0;display:block;transition:width .3s}
+.score{font-size:1.11rem;color:var(--navy);font-weight:850}
+.checklist{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.checklist li{font-size:.87rem;background:#f6f8fb;padding:8px 10px;border-radius:8px;border-left:4px solid #cbd5e1}
+.checklist li.yes{border-color:var(--green);background:#f0faf5}.checklist li.no{border-color:var(--gold);background:#fff8ed}
+.feedback{padding:11px 13px;background:#eaf4fd;color:#26465f;border-radius:9px;font-size:.87rem;margin-top:12px}
+.solution{margin:13px 0 0;padding:12px 14px;background:#fff9ec;border:1px solid #f0daa8;border-radius:10px;font-size:.87rem;display:none}
+.solution.show{display:block}.solution h4{margin:0 0 5px;color:#734b0d}.solution p{margin:4px 0}
+.catalog{margin:22px 0 0;padding:18px 21px;background:white;border:1px solid var(--line);border-radius:14px}
+.catalog h2{font-size:1.09rem;margin-bottom:5px}
+.catalog p{color:var(--muted);font-size:.86rem;margin:0 0 13px}
+.service-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.service{border:1px solid #dde6ee;border-radius:9px;background:#f7fafd;padding:10px 8px;text-align:center;min-width:0}
+.service b{display:block;color:var(--navy);font-size:.79rem;margin-top:5px}.service span{font-size:1.5rem}
+.footer-message{background:#eaf2fb;border:1px solid #ccdeed;border-radius:13px;padding:15px 18px;margin-top:21px;color:#193c5e;font-weight:690}
+footer{border-top:1px solid var(--line);padding:18px 0 23px;font-size:.77rem;color:#65758a}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+@media(max-width:980px){.workspace,.tests{grid-template-columns:1fr}.service-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:660px){.wrap{width:min(100% - 22px,1160px)}.missions{grid-template-columns:1fr}.action-grid,.test-controls{grid-template-columns:1fr}.concept-flow .arrow{display:none}.concept-flow{display:grid;grid-template-columns:1fr}.panel-head,.body{padding:15px}.assignment{padding:14px 15px}.service-grid{grid-template-columns:repeat(3,1fr)}.top-tags{gap:5px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.progress>span{transition:none}}
+</style>
 </head>
 <body>
-  <a href="#esercizio" class="skip">Vai alla simulazione</a>
-  <header class="top">
-    <div class="wrap top-inner">
-      <div class="eyebrow">Percorso di upskilling AI · Modulo B · Esercitazione A</div>
-      <h1>Simulatore di automazione</h1>
-      <p>Un evento fa partire una sequenza. Le regole stabiliscono cosa succede. Tu osservi i passaggi e cambi i dati per vedere i due possibili risultati.</p>
-      <div class="top-tag"><span class="dot" aria-hidden="true"></span> Esempi fittizi · Nessuna IA · Nessuna azione reale</div>
-    </div>
-  </header>
-
-  <main class="wrap" id="esercizio">
-    <p class="section-title">La sequenza, sempre uguale</p>
-    <div class="flow" aria-label="Quattro passaggi di un'automazione">
-      <div class="flow-item" id="flow-0"><div class="flow-top"><span class="flow-number">1</span><strong>Evento</strong></div><small>Quando parte?</small></div>
-      <div class="flow-item" id="flow-1"><div class="flow-top"><span class="flow-number">2</span><strong>Condizione</strong></div><small>La regola è soddisfatta?</small></div>
-      <div class="flow-item" id="flow-2"><div class="flow-top"><span class="flow-number">3</span><strong>Azione</strong></div><small>Che cosa deve fare?</small></div>
-      <div class="flow-item" id="flow-3"><div class="flow-top"><span class="flow-number">4</span><strong>Arresto</strong></div><small>Quando termina?</small></div>
-    </div>
-
-    <div class="grid">
-      <section class="panel" aria-labelledby="setup-heading">
-        <div class="panel-head"><h2 id="setup-heading">1. Prepara il caso</h2><p>Scegli un esempio PA e cambia solo il dato di ingresso.</p></div>
-        <div class="panel-body">
-          <p class="small-title" id="scenario-label">Quale automazione vuoi osservare?</p>
-          <div class="tabrow" role="tablist" aria-labelledby="scenario-label">
-            <button type="button" class="tab" role="tab" aria-selected="true" aria-controls="case-content" id="tab-segnalazione" data-scenario="segnalazione">Segnalazione ricevuta<span>Evento: arriva un modulo</span></button>
-            <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="case-content" id="tab-scadenze" data-scenario="scadenze">Scadenze dell'ufficio<span>Evento: giovedì alle 9:00</span></button>
-          </div>
-          <div id="case-content" role="tabpanel" aria-labelledby="tab-segnalazione">
-            <fieldset>
-              <legend id="condition-question">La segnalazione contiene tutti i campi necessari?</legend>
-              <div class="choices">
-                <label class="choice"><input type="radio" name="condition" value="yes" checked><span><strong id="yes-title">Sì, è completa</strong><em id="yes-description">Oggetto e descrizione presenti</em></span></label>
-                <label class="choice"><input type="radio" name="condition" value="no"><span><strong id="no-title">No, è incompleta</strong><em id="no-description">Manca la descrizione</em></span></label>
-              </div>
-            </fieldset>
-            <div class="case"><b>Esempio di dato (inventato)</b><p id="sample-data">Segnalazione sul servizio idrico: oggetto e descrizione compilati.</p></div>
-            <div class="rule"><strong>La regola configurata</strong><p id="fixed-rule">SE i campi sono completi → prepara una notifica per l'operatore. ALTRIMENTI → prepara una richiesta di integrazione.</p></div>
-            <div class="actions">
-              <button class="primary" type="button" id="run">▶ Avvia simulazione</button>
-              <button class="secondary" type="button" id="reset">Ricomincia</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="panel" aria-labelledby="output-heading">
-        <div class="panel-head"><div class="result-top"><h2 id="output-heading">2. Osserva cosa succede</h2><span id="status" class="status">Non avviata</span></div><p>La stessa regola produce risultati diversi a seconda dei dati.</p></div>
-        <div class="panel-body">
-          <ol class="steps" aria-label="Traccia dell'esecuzione simulata">
-            <li class="step" id="step-0"><span class="num">1</span><div><strong>Evento</strong><p class="placeholder">In attesa dell'avvio…</p></div></li>
-            <li class="step" id="step-1"><span class="num">2</span><div><strong>Condizione</strong><p class="placeholder">In attesa di verifica…</p></div></li>
-            <li class="step" id="step-2"><span class="num">3</span><div><strong>Azione</strong><p class="placeholder">Nessuna azione simulata…</p></div></li>
-            <li class="step" id="step-3"><span class="num">4</span><div><strong>Arresto</strong><p class="placeholder">In attesa di conclusione…</p></div></li>
-          </ol>
-          <div id="outcome" class="outcome" aria-live="polite"><strong id="outcome-title">Simulazione conclusa</strong><p id="outcome-description"></p></div>
-          <div id="live" class="visually-hidden" role="status" aria-live="polite"></div>
-        </div>
-      </section>
-    </div>
-
-    <div class="below">
-      <section class="note" aria-labelledby="challenge-title">
-        <h2 id="challenge-title">La prova per l'aula · 3 minuti</h2>
-        <ol>
-          <li>Avvia la simulazione con il primo dato.</li>
-          <li>Cambia il dato (da <strong>Sì</strong> a <strong>No</strong>) e ripeti.</li>
-          <li>Confronta i risultati: <strong>la regola è cambiata?</strong></li>
-        </ol>
-      </section>
-      <section class="note" aria-labelledby="lesson-title">
-        <h2 id="lesson-title">Che cosa stiamo dimostrando?</h2>
-        <p>Un'automazione <strong>esegue istruzioni già definite</strong>. Può seguire due percorsi diversi, ma non inventa da sola nuove regole.</p>
-        <p><strong>Qui non ci sono agenti, skill o modelli AI.</strong> E non vengono inviati messaggi né modificati dati reali.</p>
-      </section>
-    </div>
-  </main>
-
-  <footer><div class="wrap">Simulatore didattico autonomo · Dati inventati · Funziona anche offline · Nessun accesso a gestionali, email o servizi dell'Ente.</div></footer>
-
-  <script>
-    'use strict';
-    const scenarios = {
-      segnalazione: {
-        question: 'La segnalazione contiene tutti i campi necessari?',
-        yes: ['Sì, è completa', 'Oggetto e descrizione presenti'],
-        no: ['No, è incompleta', 'Manca la descrizione'],
-        samples: {
-          yes: 'Segnalazione sul servizio idrico: oggetto e descrizione compilati.',
-          no: 'Segnalazione sul servizio idrico: oggetto compilato, descrizione assente.'
-        },
-        rule: 'SE i campi sono completi → prepara una notifica per l’operatore. ALTRIMENTI → prepara una richiesta di integrazione.',
-        event: 'È arrivato un modulo di segnalazione (simulato).',
-        condition: {
-          yes: 'La verifica dei campi restituisce SÌ: informazioni essenziali presenti.',
-          no: 'La verifica dei campi restituisce NO: manca un’informazione essenziale.'
-        },
-        action: {
-          yes: 'La segnalazione viene inserita nella coda simulata; è preparato un avviso per l’operatore.',
-          no: 'È preparata una bozza di richiesta di integrazione, che nessuno invia.'
-        },
-        outcome: {
-          yes: 'Ramo “completo”: si prepara un avviso, senza inviarlo realmente.',
-          no: 'Ramo “incompleto”: la pratica si ferma in attesa di dati; nessun invio reale.'
-        }
-      },
-      scadenze: {
-        question: 'Ci sono attività in scadenza nei prossimi 7 giorni?',
-        yes: ['Sì, ci sono', 'Due attività in scadenza'],
-        no: ['No, nessuna', 'Nessuna attività in scadenza'],
-        samples: {
-          yes: 'Agenda fittizia dell’ufficio: 2 scadenze nei prossimi 7 giorni.',
-          no: 'Agenda fittizia dell’ufficio: 0 scadenze nei prossimi 7 giorni.'
-        },
-        rule: 'OGNI giovedì alle 9:00 controlla l’agenda. SE ci sono scadenze → prepara un elenco. ALTRIMENTI → non preparare avvisi.',
-        event: 'È giovedì, ore 9:00 (orario simulato).',
-        condition: {
-          yes: 'Il controllo dell’agenda restituisce SÌ: sono presenti 2 scadenze.',
-          no: 'Il controllo dell’agenda restituisce NO: non sono presenti scadenze.'
-        },
-        action: {
-          yes: 'È predisposto un elenco fittizio con le 2 attività, da verificare prima dell’uso.',
-          no: 'La regola prevede di non preparare alcun avviso.'
-        },
-        outcome: {
-          yes: 'Ramo “scadenze presenti”: elenco predisposto, nessun invio reale.',
-          no: 'Ramo “nessuna scadenza”: nessun elenco da predisporre.'
-        }
-      }
-    };
-    const tabs = [...document.querySelectorAll('.tab')];
-    const radio = [...document.querySelectorAll('input[name="condition"]')];
-    const runButton = document.getElementById('run');
-    const resetButton = document.getElementById('reset');
-    const status = document.getElementById('status');
-    const outcome = document.getElementById('outcome');
-    const live = document.getElementById('live');
-    const stepLabels = [
-      'In attesa dell’avvio…', 'In attesa di verifica…',
-      'Nessuna azione simulata…', 'In attesa di conclusione…'
-    ];
-    let active = 'segnalazione';
-    let token = 0;
-    let busy = false;
-    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-    const selected = () => radio.find(x => x.checked).value;
-
-    function clearView() {
-      token += 1;
-      busy = false;
-      tabs.forEach(x => x.disabled = false);
-      radio.forEach(x => x.disabled = false);
-      runButton.disabled = false;
-      resetButton.disabled = false;
-      runButton.textContent = '▶ Avvia simulazione';
-      status.textContent = 'Non avviata';
-      status.className = 'status';
-      outcome.classList.remove('show');
-      live.textContent = '';
-      for(let i=0;i<4;i++){
-        const flow = document.getElementById('flow-'+i);
-        const step = document.getElementById('step-'+i);
-        flow.className = 'flow-item';
-        step.className = 'step';
-        const para = step.querySelector('p');
-        para.textContent = stepLabels[i];
-        para.className = 'placeholder';
-      }
-    }
-    function refreshSample(){
-      document.getElementById('sample-data').textContent = scenarios[active].samples[selected()];
-    }
-    function changeScenario(id){
-      active = id;
-      const item = scenarios[id];
-      tabs.forEach(t => {
-        const on = t.dataset.scenario === id;
-        t.setAttribute('aria-selected', String(on));
-        t.tabIndex = on ? 0 : -1;
-      });
-      document.getElementById('case-content').setAttribute('aria-labelledby','tab-'+id);
-      document.getElementById('condition-question').textContent = item.question;
-      for(const answer of ['yes','no']){
-        document.getElementById(answer+'-title').textContent = item[answer][0];
-        document.getElementById(answer+'-description').textContent = item[answer][1];
-      }
-      radio[0].checked = true;
-      document.getElementById('fixed-rule').textContent = item.rule;
-      refreshSample();
-      clearView();
-    }
-    function showStep(i, message){
-      document.getElementById('flow-'+i).classList.add('active');
-      const step = document.getElementById('step-'+i);
-      step.classList.add('revealed');
-      step.querySelector('p').textContent = message;
-      step.querySelector('p').classList.remove('placeholder');
-      live.textContent = ['Evento','Condizione','Azione','Arresto'][i] + ': ' + message;
-    }
-    function finalizeStep(i){
-      const flow = document.getElementById('flow-'+i);
-      flow.classList.remove('active');
-      flow.classList.add('done');
-      if(i===3) document.getElementById('step-3').classList.add('final');
-    }
-    async function run(){
-      if(busy) return;
-      clearView();
-      busy = true;
-      const current = token;
-      const data = scenarios[active];
-      const answer = selected();
-      tabs.forEach(x=>x.disabled=true);
-      radio.forEach(x=>x.disabled=true);
-      runButton.disabled = true;
-      status.textContent = 'In esecuzione';
-      status.className = 'status running';
-      const messages = [data.event, data.condition[answer],data.action[answer],'Sequenza completata. Non sono previste altre azioni.'];
-      for(let i=0;i<4;i++){
-        if(current !== token) return;
-        showStep(i,messages[i]);
-        await sleep(window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 40 : 620);
-        if(current !== token) return;
-        finalizeStep(i);
-      }
-      status.textContent = 'Conclusa';
-      status.className = 'status complete';
-      document.getElementById('outcome-description').textContent = data.outcome[answer];
-      outcome.classList.add('show');
-      runButton.textContent = '↻ Ripeti simulazione';
-      runButton.disabled = false;
-      tabs.forEach(x=>x.disabled=false);
-      radio.forEach(x=>x.disabled=false);
-      busy = false;
-      live.textContent = 'Simulazione conclusa. '+data.outcome[answer];
-    }
-    tabs.forEach(t => t.addEventListener('click',() => changeScenario(t.dataset.scenario)));
-    document.querySelector('.tabrow').addEventListener('keydown', event => {
-      if(!['ArrowRight','ArrowLeft'].includes(event.key)) return;
-      event.preventDefault();
-      const next = active === 'segnalazione' ? 'scadenze' : 'segnalazione';
-      changeScenario(next);
-      document.getElementById('tab-'+next).focus();
-    });
-    radio.forEach(r => r.addEventListener('change',() => {refreshSample();clearView();}));
-    runButton.addEventListener('click',run);
-    resetButton.addEventListener('click',clearView);
-    refreshSample();
-  </script>
+<a class="skip" href="#lab">Vai al laboratorio</a>
+<header><div class="wrap">
+ <div class="kicker">Percorso di upskilling AI · Modulo B · Esercitazione A</div>
+ <h1>IFTTT PA Lab: costruisci l'automazione</h1>
+ <p class="lead">Non limitarti a osservare una regola: scegli <strong>quali servizi collegare</strong>, <strong>quando</strong> far partire il processo e <strong>come</strong> gestire le eccezioni. Poi prova il tuo progetto con casi diversi.</p>
+ <div class="top-tags"><span class="tag">3 missioni PA</span><span class="tag">Nessuna programmazione</span><span class="tag">Nessun servizio collegato davvero</span><span class="tag">Nessuna IA necessaria</span></div>
+</div></header>
+<main id="lab" class="wrap">
+ <section class="concept" aria-label="Principio delle automazioni"><p class="concept-title">La logica di IFTTT · IF THIS, THEN THAT</p>
+ <div class="concept-flow"><span><b>SE</b> un servizio segnala un evento</span><span class="arrow" aria-hidden="true">→</span><span><b>E SE</b> una condizione è vera</span><span class="arrow" aria-hidden="true">→</span><span><b>ALLORA</b> altri servizi svolgono azioni</span></div></section>
+ <div class="heading-row"><h2>1. Scegli una missione</h2><p>Tre difficoltà crescenti · consigliati 15–20 minuti</p></div>
+ <nav class="missions" aria-label="Seleziona una missione">
+  <button class="mission" type="button" data-mission="scadenze" aria-pressed="true"><span class="mini">Missione 1 · Base</span><strong>📆 Scadenze dell'ufficio</strong><small>Dall'orario fissato a un promemoria interno.</small></button>
+  <button class="mission" type="button" data-mission="segnalazioni" aria-pressed="false"><span class="mini">Missione 2 · Intermedia</span><strong>📝 Segnalazioni dei cittadini</strong><small>Dal modulo alla presa in carico, con dati mancanti.</small></button>
+  <button class="mission" type="button" data-mission="prenotazioni" aria-pressed="false"><span class="mini">Missione 3 · Avanzata</span><strong>🏛️ Prenotazione di una sala</strong><small>Più servizi e un caso che richiede una verifica umana.</small></button>
+ </nav>
+ <section class="assignment" aria-live="polite"><h3 id="brief-title">Missione 1</h3><p id="brief-text"></p><ul id="brief-goals"></ul><p id="brief-note" class="hint"></p></section>
+ <div class="workspace">
+  <section class="panel" aria-labelledby="builder-title"><div class="panel-head"><h2 id="builder-title">2. Collega i servizi e imposta le regole</h2><p>Non tutte le combinazioni hanno senso. Ragiona prima di scegliere.</p></div>
+  <div class="body">
+   <div class="builder-row"><div class="step-head"><span class="number">1</span><strong>IF THIS · Quale evento avvia il processo?</strong></div>
+   <p>Scegli il servizio che rileva l'evento e il suo trigger.</p><label class="sel-label" for="trigger">Servizio + evento</label><select id="trigger"></select></div>
+   <div class="builder-row"><div class="step-head"><span class="number">2</span><strong>AND IF · Quale condizione controlli?</strong></div>
+   <p>La condizione decide se proseguire o passare al percorso alternativo.</p><label class="sel-label" for="condition">Filtro</label><select id="condition"></select></div>
+   <div class="builder-row"><div class="step-head"><span class="number">3</span><strong>THEN THAT · Quali servizi devono agire?</strong></div>
+   <p>Se la condizione è vera, collega due operazioni. Nessuna viene eseguita realmente.</p>
+   <div class="action-grid"><div><label class="sel-label" for="action1">Prima azione</label><select id="action1"></select></div><div><label class="sel-label" for="action2">Seconda azione</label><select id="action2"></select></div></div></div>
+   <div class="builder-row"><div class="step-head"><span class="number">4</span><strong>OTHERWISE · Se non può proseguire?</strong></div>
+   <p>Definisci come gestire un dato mancante o un esito negativo.</p><label class="sel-label" for="otherwise">Percorso alternativo / eccezione</label><select id="otherwise"></select></div>
+   <div class="btn-row"><button class="btn primary" type="button" id="evaluate">✓ Verifica il tuo progetto</button><button class="btn" type="button" id="clear">↺ Azzera le scelte</button><button class="btn" type="button" id="example">Mostra una possibile soluzione</button></div>
+  </div></section>
+  <aside class="rightcol" aria-label="Anteprima e valutazione">
+   <section class="panel"><div class="panel-head"><h2>Il flusso che stai costruendo</h2><p>La tua automazione, non un agente.</p></div>
+   <div class="body"><div id="flow-preview" class="flow-preview" aria-live="polite"></div><div id="service-pills" class="summary-services"></div><p class="meta-info">Il sistema segue solo i passaggi che hai scelto. Se il caso cambia, non ne inventa altri.</p></div></section>
+   <section class="panel"><div class="panel-head"><h2>Controllo di progetto</h2><p>Il feedback evidenzia cosa ripensare, senza sostituire il tuo ragionamento.</p></div>
+    <div class="body"><p id="eval-start" class="empty">Completa il collegamento e premi «Verifica il tuo progetto».</p><div id="evaluation" class="eval" aria-live="polite"></div><div id="solution" class="solution" aria-live="polite"></div></div>
+   </section>
+  </aside>
+ </div>
+ <div class="tests">
+  <section class="panel"><div class="panel-head"><h2>3. Metti alla prova il flusso</h2><p>Un'automazione corretta va provata sia nel caso normale sia nell'eccezione.</p></div>
+   <div class="body"><div class="test-controls"><div><label class="sel-label" for="testcase">Dato di prova</label><select id="testcase"></select></div><button class="btn good" id="run" type="button">▶ Simula il caso</button></div><div id="case-description" class="feedback" aria-live="polite"></div><ul id="log" class="log" aria-live="polite"><li class="empty">La simulazione non è ancora stata avviata.</li></ul><div class="btn-row"><button type="button" class="btn" id="runall">Prova tutti i casi</button><button type="button" class="btn" id="export">↓ Esporta la scheda del processo</button></div></div>
+  </section>
+  <section class="panel"><div class="panel-head"><h2>Che cosa osservare</h2><p>Tre domande per capire davvero la differenza con un agente.</p></div>
+   <div class="body">
+    <ol style="margin:0;padding-left:23px;display:grid;gap:13px;font-size:.93rem"><li><b>Da dove arrivano i dati?</b> Un servizio segnala l'evento, gli altri servizi ricevono le informazioni necessarie.</li><li><b>Che cosa succede se i dati non bastano?</b> L'automazione applica la regola che hai configurato, oppure si ferma.</li><li><b>Chi decide il metodo?</b> Tu progetti il flusso. Il sistema non sceglie nuovi obiettivi e non modifica le regole da solo.</li></ol>
+    <div class="feedback" style="background:#fff5e5;margin-top:18px">⚠️ <strong>Simulazione didattica.</strong> Le azioni sono fittizie: non vengono spedite email, inseriti appuntamenti, pubblicati contenuti o utilizzati dati dell'Ente.</div>
+   </div>
+  </section>
+ </div>
+ <section class="catalog" aria-labelledby="services-title"><h2 id="services-title">Il catalogo dei servizi simulati</h2><p>Come in IFTTT, un servizio può fornire un <b>evento</b>, ricevere un'<b>azione</b> o entrambi. Qui non chiediamo credenziali e non colleghiamo account reali.</p><div class="service-grid">
+  <div class="service"><span>⏰</span><b>Pianificazione</b></div><div class="service"><span>📝</span><b>Moduli</b></div><div class="service"><span>📊</span><b>Fogli / Registro</b></div><div class="service"><span>✉️</span><b>Posta interna</b></div><div class="service"><span>📅</span><b>Calendario</b></div><div class="service"><span>👤</span><b>Attività operatore</b></div>
+ </div></section>
+ <div class="footer-message">📌 <strong>La lezione:</strong> non basta dire «automatizziamo il procedimento». Bisogna identificare <strong>evento, fonte dei dati, condizione, servizi destinatari, azioni, eccezioni e controlli umani.</strong> Tutto questo può esistere senza IA.</div>
+</main>
+<footer><div class="wrap">Laboratorio PA · Applicazione statica e autonoma · Esempi inventati · Nessun account, server, API, libreria esterna o invio di informazioni · Non è il sito ufficiale IFTTT.</div></footer>
+<script>
+'use strict';
+const TRIGGERS=[
+{id:'clock.thu09',service:'Pianificazione',title:'Ogni giovedì alle 09:00'},
+{id:'clock.daily',service:'Pianificazione',title:'Ogni mattina alle 09:00'},
+{id:'forms.report',service:'Moduli',title:'Nuova segnalazione ricevuta'},
+{id:'forms.booking',service:'Moduli',title:'Nuova richiesta di prenotazione sala'},
+{id:'sheet.edit',service:'Fogli',title:'Una riga viene modificata'},
+{id:'mail.new',service:'Posta',title:'Arriva un messaggio email'}
+];
+const CONDITIONS=[
+{id:'sheet.due7',service:'Fogli',title:'Esistono scadenze entro 7 giorni'},
+{id:'sheet.any',service:'Fogli',title:'Esiste almeno una riga (qualunque)'},
+{id:'form.complete',service:'Moduli',title:'I campi obbligatori sono presenti'},
+{id:'form.any',service:'Moduli',title:'È stato inserito qualunque contenuto'},
+{id:'booking.completeAvailable',service:'Moduli + Calendario',title:'Campi completi E sala disponibile'},
+{id:'booking.completeOnly',service:'Moduli',title:'Campi completi (senza controllare disponibilità)'},
+{id:'always',service:'Nessun filtro',title:'Procedi sempre'}
+];
+const ACTIONS=[
+{id:'sheet.summary',service:'Fogli',title:'Prepara un elenco delle scadenze'},
+{id:'mail.internalDraft',service:'Posta interna',title:'Prepara una notifica interna (bozza)'},
+{id:'sheet.register',service:'Registro',title:'Aggiungi la segnalazione al registro simulato'},
+{id:'task.queue',service:'Attività',title:'Crea un compito per l’operatore'},
+{id:'calendar.draftHold',service:'Calendario',title:'Prepara una proposta di prenotazione (bozza)'},
+{id:'log.ok',service:'Registro',title:'Segna “controllo effettuato”'},
+{id:'mail.autoCitizen',service:'Posta esterna',title:'Invia automaticamente una risposta al cittadino'},
+{id:'website.publish',service:'Sito web',title:'Pubblica automaticamente sul sito'}
+];
+const OTHERWISE=[
+{id:'log.none',service:'Registro',title:'Registra “nessun elemento da segnalare”'},
+{id:'task.integration',service:'Attività',title:'Crea una richiesta interna di integrazione'},
+{id:'task.manualReview',service:'Attività',title:'Invia il caso a verifica umana (simulata)'},
+{id:'stop',service:'Sistema',title:'Interrompi senza segnalare'},
+{id:'mail.reject',service:'Posta esterna',title:'Invia un rifiuto automatico al cittadino'}
+];
+const MISSION={
+ scadenze:{
+ title:'Missione 1 — Scadenze dell’ufficio',brief:'Ogni giovedì alle 09:00 bisogna controllare il foglio delle scadenze. Se ci sono attività nei prossimi sette giorni, l’ufficio vuole un elenco e una bozza di notifica interna. Se non ce ne sono, basta una registrazione del controllo.',
+ goals:['Partenza: giovedì alle 09:00, non ogni giorno.','Filtro: scadenze entro 7 giorni, non semplicemente righe presenti.','Azioni: elenco delle scadenze + bozza per l’ufficio.','Se il filtro non passa: annotare che non ci sono scadenze.'],
+ note:'Domanda guida: quale servizio avvia l’automazione? Quale servizio contiene i dati da controllare?',
+ correct:{trigger:'clock.thu09',condition:'sheet.due7',actions:['sheet.summary','mail.internalDraft'],otherwise:'log.none'},
+ tests:[
+ {name:'Due scadenze',desc:'È giovedì alle 09:00. Il foglio contiene due attività nei prossimi 7 giorni.',event:'clock.thu09',due:2,expect:'then'},
+ {name:'Nessuna scadenza',desc:'È giovedì alle 09:00, ma non risultano scadenze nel periodo.',event:'clock.thu09',due:0,expect:'else'},
+ {name:'Fuori programma',desc:'È arrivato un avvio non previsto. L’automazione configurata per giovedì NON deve partire.',event:'clock.manual',due:2,expect:'none'}]
+ },
+ segnalazioni:{
+ title:'Missione 2 — Segnalazioni dei cittadini',brief:'All’arrivo di una nuova segnalazione tramite modulo, l’ufficio vuole registrarla e creare un compito interno soltanto se i campi obbligatori sono completi. Se mancano informazioni, serve una richiesta di integrazione da far gestire a una persona.',
+ goals:['Partenza: nuova segnalazione nel servizio Moduli.','Filtro: verifica dei campi obbligatori.','Azioni: registrazione nel foglio + compito per l’operatore.','Se incompleta: attività interna di integrazione, senza invio automatico al cittadino.'],
+ note:'Non confondere ricezione del modulo e completezza del modulo. Sono due domande differenti.',
+ correct:{trigger:'forms.report',condition:'form.complete',actions:['sheet.register','task.queue'],otherwise:'task.integration'},
+ tests:[
+ {name:'Segnalazione completa',desc:'Modulo ricevuto con oggetto e descrizione presenti.',event:'forms.report',complete:true,expect:'then'},
+ {name:'Segnalazione incompleta',desc:'Modulo ricevuto senza la descrizione obbligatoria.',event:'forms.report',complete:false,expect:'else'},
+ {name:'Arriva un’email',desc:'Un messaggio email non è una nuova segnalazione del servizio Moduli.',event:'mail.new',complete:true,expect:'none'}]
+ },
+ prenotazioni:{
+ title:'Missione 3 — Prenotazione sala comunale',brief:'Un modulo richiede l’uso di una sala comunale. L’automazione può proporre un appuntamento sul calendario e preparare una bozza per l’ufficio solo quando la domanda è completa E la sala risulta disponibile. Negli altri casi deve fermarsi per una verifica umana.',
+ goals:['Partenza: nuovo modulo di prenotazione.','Filtro doppio: campi completi E disponibilità verificata sul calendario.','Azioni: bozza di evento nel calendario + bozza di notifica interna.','Sala occupata o disponibilità ignota: invio a verifica umana, non rifiuto automatico.'],
+ note:'La condizione “campi completi” da sola non basta: chi garantisce che la sala sia libera?',
+ correct:{trigger:'forms.booking',condition:'booking.completeAvailable',actions:['calendar.draftHold','mail.internalDraft'],otherwise:'task.manualReview'},
+ tests:[
+ {name:'Domanda completa, sala libera',desc:'Tutti i campi sono presenti e il calendario conferma disponibilità.',event:'forms.booking',complete:true,available:true,expect:'then'},
+ {name:'Sala già occupata',desc:'La domanda è completa, ma lo spazio risulta già impegnato.',event:'forms.booking',complete:true,available:false,expect:'else'},
+ {name:'Disponibilità non accertata',desc:'La domanda è completa, ma il calendario non dà un esito certo.',event:'forms.booking',complete:true,available:null,expect:'else'}]
+ }
+};
+const $=id=>document.getElementById(id);
+const fields=['trigger','condition','action1','action2','otherwise'];
+const optionsMap={trigger:TRIGGERS,condition:CONDITIONS,action1:ACTIONS,action2:ACTIONS,otherwise:OTHERWISE};
+let active='scadenze';
+let selectedTest=0;
+let evaluationRun=false;
+let solutionShown=false;
+let lastRun='';
+function optLabel(obj){return obj.service+' · '+obj.title;}
+function populateSelect(id){const sel=$(id);sel.innerHTML='';const o=document.createElement('option');o.value='';o.textContent='— Scegli dal catalogo —';sel.appendChild(o);for(const item of optionsMap[id]){const el=document.createElement('option');el.value=item.id;el.textContent=optLabel(item);sel.appendChild(el);}}
+function findOpt(field,id){return optionsMap[field].find(x=>x.id===id);}
+function values(){return Object.fromEntries(fields.map(f=>[f,$(f).value]));}
+function appendNode(label,description,extra){const div=document.createElement('div');div.className='flow-node '+(description?'':'missing')+' '+(extra||'');const lab=document.createElement('span');lab.className='label';lab.textContent=label;const b=document.createElement('strong');b.textContent=description||'Da configurare';div.append(lab,b);$('flow-preview').appendChild(div);}
+function preview(){const v=values();const p=$('flow-preview');p.textContent='';
+ appendNode('IF THIS · Evento',findOpt('trigger',v.trigger)?optLabel(findOpt('trigger',v.trigger)):null);
+ const ar=document.createElement('div');ar.className='flow-arrow';ar.textContent='↓';p.appendChild(ar);
+ appendNode('AND IF · Condizione',findOpt('condition',v.condition)?optLabel(findOpt('condition',v.condition)):null);
+ const ar2=document.createElement('div');ar2.className='flow-arrow';ar2.textContent='↓';p.appendChild(ar2);
+ let a=[v.action1,v.action2].map((id,i)=>findOpt(i===0?'action1':'action2',id)).filter(Boolean);
+ appendNode('THEN THAT · Azioni',a.length?a.map(optLabel).join(' → '):null);
+ appendNode('OTHERWISE · Eccezione',findOpt('otherwise',v.otherwise)?optLabel(findOpt('otherwise',v.otherwise)):null,'else');
+ const ss=$('service-pills');ss.textContent='';const services=new Set();for(const f of fields){const o=findOpt(f,v[f]);if(o)services.add(o.service);}if(services.size){for(const service of services){const span=document.createElement('span');span.className='service-pill';span.textContent='◉ '+service;ss.appendChild(span);}}else{ss.textContent='I servizi collegati compariranno qui.';ss.className='summary-services';}
+ }
+function setMission(id){active=id;selectedTest=0;evaluationRun=false;solutionShown=false;lastRun='';for(const b of document.querySelectorAll('[data-mission]'))b.setAttribute('aria-pressed',String(b.dataset.mission===id));const m=MISSION[id];$('brief-title').textContent=m.title;$('brief-text').textContent=m.brief;$('brief-goals').textContent='';for(const s of m.goals){const li=document.createElement('li');li.textContent=s;$('brief-goals').appendChild(li);}$('brief-note').textContent=m.note;for(const f of fields)$(f).value='';$('testcase').textContent='';m.tests.forEach((t,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=t.name;$('testcase').appendChild(o);});$('testcase').value='0';testDesc();$('log').innerHTML='<li class="empty">La simulazione non è ancora stata avviata.</li>';$('solution').className='solution';$('solution').textContent='';$('evaluation').className='eval';$('evaluation').textContent='';$('eval-start').hidden=false;preview();}
+function testDesc(){const t=MISSION[active].tests[Number($('testcase').value)||0];$('case-description').textContent='Dato fittizio: '+t.desc;}
+function evaluateCondition(id,t){switch(id){case 'always':return true;case 'sheet.due7':return (t.due||0)>0;case 'sheet.any':return (t.due||0)>=0 && typeof t.due==='number';case 'form.complete':return t.complete===true;case 'form.any':return typeof t.complete==='boolean';case 'booking.completeAvailable':return t.complete===true && t.available===true;case 'booking.completeOnly':return t.complete===true;default:return false;}}
+function newLog(html,cls){const li=document.createElement('li');li.className=cls||'';li.textContent=html;$('log').appendChild(li);}
+function runOne(t,accumulate=false){const v=values();if(!accumulate){$('log').textContent='';}
+ newLog('CASO: '+t.name+' — '+t.desc,'');
+ if(!v.trigger){newLog('BLOCCATO: manca il servizio che deve generare l’evento.','danger');return;}
+ if(t.event!==v.trigger){newLog('IF: l’evento selezionato non si è verificato. Nessuna azione viene avviata.','warn');return;}
+ newLog('IF: evento riconosciuto — '+findOpt('trigger',v.trigger).title,'ok');
+ if(!v.condition){newLog('BLOCCATO: non hai indicato una condizione.','danger');return;}
+ const pass=evaluateCondition(v.condition,t);
+ newLog('AND IF: '+findOpt('condition',v.condition).title+' → '+(pass?'SÌ':'NO'),' '+(pass?'ok':'warn'));
+ if(pass){const acts=[v.action1,v.action2];if(!acts[0]||!acts[1]){newLog('BLOCCATO: mancano una o più azioni.','danger');return;}
+ for(const a of acts){const o=findOpt('action1',a);newLog('THEN: '+o.service+' → '+o.title+' (solo simulazione).',a==='mail.autoCitizen'||a==='website.publish'?'danger':'ok');}
+ if(acts.includes('mail.autoCitizen')||acts.includes('website.publish'))newLog('ATTENZIONE: hai previsto una comunicazione o pubblicazione automatica verso l’esterno. Serve una valutazione dei permessi e del controllo umano.','danger');
+ }else{if(!v.otherwise){newLog('NESSUN PERCORSO ALTERNATIVO: il flusso si ferma senza una gestione esplicita dell’eccezione.','warn');return;}const o=findOpt('otherwise',v.otherwise);newLog('OTHERWISE: '+o.service+' → '+o.title+' (solo simulazione).',v.otherwise==='mail.reject'?'danger':'warn');}
+ newLog('FINE: la sequenza è terminata. Il sistema non sceglie nuove attività.','');}
+function runSelected(){runOne(MISSION[active].tests[Number($('testcase').value)||0]);}
+function runAll(){let first=true;for(const t of MISSION[active].tests){runOne(t,!first);first=false;}}
+function criterion(name,ok,comment){const li=document.createElement('li');li.className=ok?'yes':'no';li.textContent=(ok?'✓ ':'△ ')+name+(ok?' — configurato.':' — '+comment);return li;}
+function assess(){const v=values(),c=MISSION[active].correct;let checks=[
+ {name:'Evento/servizio iniziale',ok:v.trigger===c.trigger,wrong:'rivedi il momento in cui il processo deve partire.',points:20},
+ {name:'Condizione/fonte dei dati',ok:v.condition===c.condition,wrong:'il filtro non corrisponde a tutti i casi previsti.',points:20},
+ {name:'Prima azione su servizio destinatario',ok:c.actions.includes(v.action1)&&v.action1!==v.action2,wrong:'una delle due operazioni richieste è mancante o non pertinente.',points:20},
+ {name:'Seconda azione su servizio destinatario',ok:c.actions.includes(v.action2)&&v.action1!==v.action2,wrong:'verifica che i servizi svolgano due compiti distinti.',points:20},
+ {name:'Percorso di eccezione',ok:v.otherwise===c.otherwise,wrong:'rivedi cosa fare quando la condizione non è soddisfatta.',points:20}
+ ];
+ const score=checks.reduce((a,c)=>a+(c.ok?c.points:0),0);
+ const box=$('evaluation');box.textContent='';box.className='eval visible';$('eval-start').hidden=true;
+ const title=document.createElement('div');title.className='score';title.textContent='Coerenza della configurazione: '+score+'/100';box.appendChild(title);
+ const bar=document.createElement('div');bar.className='progress';const inner=document.createElement('span');inner.style.width=score+'%';bar.appendChild(inner);box.appendChild(bar);
+ const ul=document.createElement('ul');ul.className='checklist';for(const check of checks)ul.appendChild(criterion(check.name,check.ok,check.wrong));box.appendChild(ul);
+ const end=document.createElement('p');end.className='feedback';end.textContent=score===100?'Progetto coerente con la consegna. Prova ora almeno un caso positivo e uno negativo: non è una certificazione tecnica.':'Prova il flusso con dati diversi, poi correggi i collegamenti segnalati. Il punteggio è una guida didattica, non una valutazione personale.';box.appendChild(end);evaluationRun=true;
+ return score;
+}
+function showSolution(){const c=MISSION[active].correct;const sol=$('solution');sol.textContent='';const h=document.createElement('h4');h.textContent='Una soluzione possibile · '+MISSION[active].title;sol.appendChild(h);
+ const lines=[['Evento',optLabel(findOpt('trigger',c.trigger))],['Condizione',optLabel(findOpt('condition',c.condition))],['Azioni',c.actions.map(a=>optLabel(findOpt('action1',a))).join(' + ')],['Eccezione',optLabel(findOpt('otherwise',c.otherwise))]];for(const [label,value] of lines){const p=document.createElement('p');const b=document.createElement('b');b.textContent=label+': ';p.appendChild(b);p.appendChild(document.createTextNode(value));sol.appendChild(p);}
+ const btn=document.createElement('button');btn.className='btn';btn.type='button';btn.textContent='Usa questa soluzione nel builder';btn.addEventListener('click',()=>{for(const f of fields)$(f).value='';$('trigger').value=c.trigger;$('condition').value=c.condition;$('action1').value=c.actions[0];$('action2').value=c.actions[1];$('otherwise').value=c.otherwise;preview();assess();window.scrollTo({top:$('builder-title').getBoundingClientRect().top+window.scrollY-20,behavior:'smooth'});});sol.appendChild(btn);sol.className='solution show';solutionShown=true;}
+function escapeMarkdown(s){return String(s||'Da definire').replace(/[\\`*_{}\[\]<>#]/g,'\\$&');}
+function exportSheet(){const v=values(),m=MISSION[active], date='esercitazione';const value=f=>{const item=findOpt(f,v[f]);return item?optLabel(item):'NON CONFIGURATO';};
+ const txt=`# Scheda di automazione — ${m.title}\n\n**Contesto:** laboratorio didattico. Nessun collegamento reale ai sistemi dell’Ente.\n\n## Obiettivo\n${m.brief}\n\n## Collegamenti simulati\n- **IF (servizio + evento):** ${value('trigger')}\n- **AND IF (filtro):** ${value('condition')}\n- **THEN (azione 1):** ${value('action1')}\n- **THEN (azione 2):** ${value('action2')}\n- **OTHERWISE (eccezione):** ${value('otherwise')}\n\n## Verifiche da fare in un progetto reale\n- Verificare l’accesso autorizzato ai servizi collegati.\n- Definire quali dati possono passare tra i servizi.\n- Prevedere intervento umano in caso di dati incompleti e conseguenze sui cittadini.\n- Testare casi normali, eccezioni e duplicazioni.\n- Non eseguire invii o pubblicazioni automatiche senza autorizzazione.\n\n## Esito della prova\nDocumento di progettazione didattica; non dimostra che un’automazione sia stata realmente attivata.\n`;
+ const blob=new Blob([txt],{type:'text/markdown;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='scheda-automazione-'+active+'.md';a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);}
+function onUpdate(){preview();if(evaluationRun){$('evaluation').className='eval';$('eval-start').hidden=false;evaluationRun=false;}if(solutionShown){$('solution').className='solution';solutionShown=false;}}
+for(const f of fields){populateSelect(f);$(f).addEventListener('change',onUpdate);}
+for(const btn of document.querySelectorAll('[data-mission]'))btn.addEventListener('click',()=>setMission(btn.dataset.mission));
+$('testcase').addEventListener('change',testDesc);
+$('evaluate').addEventListener('click',assess);
+$('example').addEventListener('click',showSolution);
+$('clear').addEventListener('click',()=>{for(const f of fields)$(f).value='';onUpdate();$('log').innerHTML='<li class="empty">La simulazione non è ancora stata avviata.</li>';});
+$('run').addEventListener('click',runSelected);
+$('runall').addEventListener('click',runAll);
+$('export').addEventListener('click',exportSheet);
+setMission('scadenze');
+</script>
 </body>
 </html>
